@@ -47,7 +47,9 @@ export const Connect: React.FC<{
       setValidNetwork(true);
       setLoading(true);
       const load = async () => {
+        console.log("create fhevm instance");
         await createFhevmInstance();
+        console.log("created");
         setLoading(false);
       };
       window.requestAnimationFrame(load);

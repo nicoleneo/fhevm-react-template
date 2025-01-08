@@ -1,0 +1,33 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/typescript-node
+{
+	"name": "Node.js & TypeScript",
+	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+	"image": "mcr.microsoft.com/devcontainers/typescript-node:1-20-bookworm",
+	"features": {
+		"ghcr.io/devcontainers-extra/features/pnpm:2": {}
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"NomicFoundation.hardhat-solidity"
+			]
+		}
+	},
+	"runArgs": ["--name", "fhevm-fs-devContainer",
+		"--hostname", "fhevm-fs-devContainer",
+		"--add-host", "fhevm-fs-devContainer:127.0.0.1",
+		"--net", "host"],
+	// Features to add to the dev container. More info: https://containers.dev/features.
+	// "features": {},
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	//"forwardPorts": [],
+	"portsAttributes": {"4173": {"label": "Frontend port"}, "8545": {"label": "hardhat network RPC"}}
+,	// Use 'postCreateCommand' to run commands after the container is created.
+	"postCreateCommand": "pnpm config set store-dir /home/node/.local/share/pnpm/store"
+	// "postCreateCommand": "yarn install",
+	// Configure tool-specific properties.
+	// "customizations": {},
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+	// "remoteUser": "root"
+}

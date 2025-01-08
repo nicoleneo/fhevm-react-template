@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Devnet } from './components/Devnet';
 import { init } from './fhevmjs';
 import './App.css';
 import { Connect } from './components/Connect';
+import { Counter } from './components/Counter/Counter';
 
 function App() {
   const [isInitialized, setIsInitialized] = useState(false);
@@ -19,10 +19,10 @@ function App() {
 
   return (
     <>
-      <h1>Confidential ERC20 dApp</h1>
+      <h1>Counter dApp</h1>
       <Connect>
         {(account, provider, readOnlyProvider) => (
-          <Devnet
+          <Counter
             account={account}
             provider={provider}
             readOnlyProvider={readOnlyProvider}

@@ -8,11 +8,15 @@
     "dev-mocked": "MOCKED=true node scripts/dev.js",
     "build": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview",
+    "preview": "vite preview --host",
     "prettier": "prettier --write \"**/*.{js,json,md,sol,ts,yml}\"",
     "prettier:check": "prettier --check \"**/*.{js,json,md,sol,ts,yml}\""
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/base": "5.0.0-beta.68",
+    "@mui/material": "^6.3.1",
     "ethers": "^6.6.4",
     "idb": "^8.0.0",
     "react": "^18.3.1",

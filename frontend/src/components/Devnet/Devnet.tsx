@@ -43,21 +43,22 @@ export const Devnet = ({
       try {
         // Conditional import based on MOCKED environment variable
         let MyConfidentialERC20;
-        if (!import.meta.env.MOCKED) {
+        console.log(import.meta)
+        /* if (!import.meta.env.MOCKED) {
           MyConfidentialERC20 = await import(
             '@deployments/sepolia/MyConfidentialERC20.json'
           );
           console.log(
             `Using ${MyConfidentialERC20.address} for the token address on Sepolia`,
           );
-        } else {
+        } else { */
           MyConfidentialERC20 = await import(
             '@deployments/localhost/MyConfidentialERC20.json'
           );
           console.log(
             `Using ${MyConfidentialERC20.address} for the token address on Hardhat Local Node`,
           );
-        }
+        //}
 
         setContractAddress(MyConfidentialERC20.address);
       } catch (error) {
