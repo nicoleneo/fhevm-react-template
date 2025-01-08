@@ -65,7 +65,7 @@ export const reencryptRequestMocked = async (
 const getClearText = async (handleBigInt: bigint): Promise<string> => {
   const handle = handleBigInt.toString();
   const { status, result, message } = await fetch(
-    'http://localhost:3000/get-clear-text',
+    '/get-clear-text',
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -363,7 +363,7 @@ const encryptValues = async (
   userAddress: string,
   contractAddress: string,
 ): Promise<{ handles: Uint8Array[]; inputProof: Uint8Array }> => {
-  const response = await fetch('http://localhost:3000/encrypt', {
+  const response = await fetch('/encrypt', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({

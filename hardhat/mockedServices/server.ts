@@ -177,6 +177,7 @@ async function encrypt(
 }
 
 app.post("/encrypt", async (req: Request<{}, {}, EncryptRequest>, res: Response<EncryptResponse>) => {
+  console.log("encrypt call")
   try {
     const { values, bits, userAddress, contractAddress } = req.body;
 

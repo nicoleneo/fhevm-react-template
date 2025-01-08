@@ -25,6 +25,10 @@ export default defineConfig({
       'Cross-Origin-Opener-Policy': 'same-origin',
       'Cross-Origin-Embedder-Policy': 'require-corp',
     },
+    proxy: {
+      '/encrypt': 'http://localhost:3001',
+      '/get-clear-text': 'http://localhost:3001',
+    }
   },
   worker: {
     format: 'es',
