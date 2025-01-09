@@ -75,15 +75,31 @@ task("test", async (_taskArgs, hre, runSuper) => {
 
 task("node", async (_taskArgs, hre, runSuper) => {
   await setCodeMocked(hre);
-  const server = spawn("ts-node", ["--transpile-only", "mockedServices/server.ts"], {
-    stdio: "inherit",
-  });
 
-  process.on("SIGINT", () => {
-    server.kill();
-    process.exit(0);
-  });
-  await runSuper();
+
+  const mockServer = () => {
+    console.log("waiting 20s for HTTP and WebSocket JSON-RPC server")
+    setTimeout(() => {
+      console.log("waited 20s to start mock server ")
+      return new Promise((resolve, reject) => {
+        console.log("starting mock server");
+        const server = spawn("ts-node", ["--transpile-only", "mockedServices/server.ts"], {
+          stdio: "inherit",
+        });
+        console.log("Mock server started");
+        resolve("Mock server started");
+
+        process.on("SIGINT", () => {
+          server.kill();
+          process.exit(0);
+          reject("SIGINT")
+        });
+      })
+    }, 20000);
+
+  };
+
+  await Promise.all([runSuper(), mockServer()])
 });
 
 const config: HardhatUserConfig = {
