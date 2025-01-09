@@ -23,6 +23,7 @@ export const Counter = ({
   provider,
   readOnlyProvider,
 }: CounterProps) => {
+  const [loading, setLoading] = useState(false);
   const [contractAddress, setContractAddress] = useState(ZeroAddress);
 
   const [decryptedCount, setDecryptedCount] = useState('???');
@@ -76,15 +77,16 @@ export const Counter = ({
 
   const getCounterValue = async () => {
     if (contractAddress != ZeroAddress) {
+      setLoading(true);
       const signer = await provider.getSigner();
       const contract = EncryptedCounter3__factory.connect(contractAddress, signer);
       console.log("requesting decryption");
       const tx = await contract.requestDecryptCounter();
       await tx.wait();
       // Wait for decryption to complete
-      await awaitAllDecryptionResults();
       const decryptedValue = await contract.decryptedCounter();
       setDecryptedCount(decryptedValue.toString());
+      setLoading(false);
     }
   };
 
@@ -126,14 +128,14 @@ export const Counter = ({
   };
 
   const handleIncrementCounter = async () => {
+    setLoading(true);
     const signer = await provider.getSigner();
     const contract = EncryptedCounter3__factory.connect(contractAddress, signer);
     console.log(`incrementing counter by ${value}`);
+    console.log(toHexString(handles[0]), toHexString(encryption));
     const tx = await contract.incrementBy(toHexString(handles[0]), toHexString(encryption));
     await tx.wait();
-    // Wait for decryption to complete
-    const decryptedValue = await contract.decryptedCounter();
-    setDecryptedCount(decryptedValue.toString());
+    setLoading(false);
   };
 
   return (
@@ -146,7 +148,7 @@ export const Counter = ({
         value={value}
         onChange={(_event, val: number) => setValue(val)}
       />
-      <Button onClick={() => void encrypt(value)}>Encrypt increment value</Button>
+      <Button disabled={loading} onClick={() => void encrypt(value)}>Encrypt increment value</Button>
 
       <Box>
         <p>This is an encryption of {value}:</p>
@@ -155,8 +157,8 @@ export const Counter = ({
         <pre>Input Proof: {encryption ? toHexString(encryption) : ''}
         </pre>
       </Box>
-      <Button onClick={() => void handleIncrementCounter()}>Increment Counter</Button>
-      <Button color="secondary" onClick={() => void getCounterValue()}>Update counter value</Button>
+      <Button disabled={loading} onClick={() => void handleIncrementCounter()}>Increment Counter</Button>
+      <Button disabled={loading} color="secondary" onClick={() => void getCounterValue()}>Update counter value</Button>
     </Container>
   );
 };

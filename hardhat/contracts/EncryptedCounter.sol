@@ -10,6 +10,8 @@ import "fhevm/gateway/GatewayCaller.sol";
 /// @notice A contract that maintains an encrypted counter and is meant for demonstrating how decryption works
 /// @dev Uses TFHE library for fully homomorphic encryption operations and Gateway for decryption
 /// @custom:experimental This contract is experimental and uses FHE technology with decryption capabilities
+import "hardhat/console.sol";
+
 contract EncryptedCounter3 is SepoliaZamaFHEVMConfig, SepoliaZamaGatewayConfig, GatewayCaller {
     /// @dev Decrypted state variable
     euint8 internal counter;
@@ -23,6 +25,7 @@ contract EncryptedCounter3 is SepoliaZamaFHEVMConfig, SepoliaZamaGatewayConfig, 
     }
 
     function incrementBy(einput amount, bytes calldata inputProof) public {
+        console.log("increment by");
         // Convert input to euint8 and add to counter
         euint8 incrementAmount = TFHE.asEuint8(amount, inputProof);
         counter = TFHE.add(counter, incrementAmount);
@@ -31,6 +34,7 @@ contract EncryptedCounter3 is SepoliaZamaFHEVMConfig, SepoliaZamaGatewayConfig, 
 
     /// @notice Request decryption of the counter value
     function requestDecryptCounter() public {
+        console.log("request decrypt counter");
         uint256[] memory cts = new uint256[](1);
         cts[0] = Gateway.toUint256(counter);
         Gateway.requestDecryption(cts, this.callbackCounter.selector, 0, block.timestamp + 100, false);
@@ -47,6 +51,7 @@ contract EncryptedCounter3 is SepoliaZamaFHEVMConfig, SepoliaZamaGatewayConfig, 
     /// @notice Get the decrypted counter value
     /// @return The decrypted counter value
     function getDecryptedCounter() public view returns (uint8) {
+        console.log("get decrypted counter");
         return decryptedCounter;
     }
 }

@@ -7,6 +7,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deploy } = hre.deployments;
 
   const deployed = await deploy("EncryptedCounter3", {
+    contract: "EncryptedCounter3",
     from: deployer,
     args: [],
     log: true,
