@@ -30,6 +30,7 @@ contract EncryptedCounter3 is SepoliaZamaFHEVMConfig, SepoliaZamaGatewayConfig, 
         euint8 incrementAmount = TFHE.asEuint8(amount, inputProof);
         counter = TFHE.add(counter, incrementAmount);
         TFHE.allowThis(counter);
+        console.log("finished incrementing");
     }
 
     /// @notice Request decryption of the counter value
@@ -44,6 +45,7 @@ contract EncryptedCounter3 is SepoliaZamaFHEVMConfig, SepoliaZamaGatewayConfig, 
     /// @param decryptedInput The decrypted counter value
     /// @return The decrypted value
     function callbackCounter(uint256, uint8 decryptedInput) public onlyGateway returns (uint8) {
+        console.log("set decrypted counter");
         decryptedCounter = decryptedInput;
         return decryptedInput;
     }

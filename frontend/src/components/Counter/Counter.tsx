@@ -78,12 +78,14 @@ export const Counter = ({
   const getCounterValue = async () => {
     if (contractAddress != ZeroAddress) {
       setLoading(true);
+      setDecryptedCount("???");
       const signer = await provider.getSigner();
       const contract = EncryptedCounter3__factory.connect(contractAddress, signer);
       console.log("requesting decryption");
       const tx = await contract.requestDecryptCounter();
       await tx.wait();
       // Wait for decryption to complete
+      console.log("decryption complete, set decrypted value")
       const decryptedValue = await contract.decryptedCounter();
       setDecryptedCount(decryptedValue.toString());
       setLoading(false);
@@ -136,6 +138,8 @@ export const Counter = ({
     const tx = await contract.incrementBy(toHexString(handles[0]), toHexString(encryption));
     await tx.wait();
     setLoading(false);
+    setHandles([]);
+    setEncryption(undefined);
   };
 
   return (
@@ -157,8 +161,8 @@ export const Counter = ({
         <pre>Input Proof: {encryption ? toHexString(encryption) : ''}
         </pre>
       </Box>
-      <Button disabled={loading} onClick={() => void handleIncrementCounter()}>Increment Counter</Button>
-      <Button disabled={loading} color="secondary" onClick={() => void getCounterValue()}>Update counter value</Button>
+      <Button disabled={loading || !encryption} onClick={() => void handleIncrementCounter()}>Send Increment Counter call</Button>
+      <Button disabled={loading} color="secondary" onClick={() => void getCounterValue()}>Retrieve counter value</Button>
     </Container>
   );
 };
