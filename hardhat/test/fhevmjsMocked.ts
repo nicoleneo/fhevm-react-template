@@ -14,6 +14,7 @@ import {
 } from "./constants";
 import { insertSQL } from "./coprocessorUtils";
 import { awaitCoprocessor, getClearText } from "./coprocessorUtils";
+import { ZKInput } from "fhevmjs/lib/sdk/encrypt";
 
 enum Types {
   ebool = 0,
@@ -154,7 +155,7 @@ export const reencryptRequestMocked = async (
   return BigInt(await getClearText(handle));
 };
 
-export const createEncryptedInputMocked = (contractAddress: string, userAddress: string) => {
+export const createEncryptedInputMocked = (contractAddress: string, userAddress: string): ZKInput => {
   if (!isAddress(contractAddress)) {
     throw new Error("Contract address is not a valid address.");
   }

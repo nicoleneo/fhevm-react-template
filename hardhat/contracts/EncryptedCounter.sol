@@ -2,8 +2,6 @@
 pragma solidity ^0.8.24;
 
 import "fhevm/lib/TFHE.sol";
-import { SepoliaZamaFHEVMConfig } from "fhevm/config/ZamaFHEVMConfig.sol";
-import { SepoliaZamaGatewayConfig } from "fhevm/config/ZamaGatewayConfig.sol";
 import "fhevm/decryption/DecryptionOracleCaller.sol";
 
 /// @title EncryptedCounter3
@@ -12,12 +10,13 @@ import "fhevm/decryption/DecryptionOracleCaller.sol";
 /// @custom:experimental This contract is experimental and uses FHE technology with decryption capabilities
 import "hardhat/console.sol";
 
-contract EncryptedCounter3 is SepoliaZamaFHEVMConfig, SepoliaZamaGatewayConfig, DecryptionOracleCaller {
+contract EncryptedCounter3 is DecryptionOracleCaller {
     /// @dev Decrypted state variable
     euint8 internal counter;
     uint8 public decryptedCounter;
 
     constructor() {
+        // DecryptionOracleCaller.setDecryptionOracle(GATEWAY_ADDRESS); // TODO
 
         // Initialize counter with an encrypted zero value
         counter = TFHE.asEuint8(0);

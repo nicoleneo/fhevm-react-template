@@ -3,8 +3,6 @@
 pragma solidity ^0.8.24;
 
 import "fhevm/lib/TFHE.sol";
-import "fhevm/config/ZamaFHEVMConfig.sol";
-import "fhevm/config/ZamaGatewayConfig.sol";
 import "fhevm/decryption/DecryptionOracleCaller.sol";
 import "fhevm-contracts/contracts/token/ERC20/extensions/ConfidentialERC20Mintable.sol";
 
@@ -12,8 +10,6 @@ import "fhevm-contracts/contracts/token/ERC20/extensions/ConfidentialERC20Mintab
 /// @dev It supports typical ERC20 functionality such as transferring tokens, minting, and setting allowances,
 /// @dev but uses encrypted data types.
 contract MyConfidentialERC20 is
-    SepoliaZamaFHEVMConfig,
-    SepoliaZamaGatewayConfig,
     DecryptionOracleCaller,
     ConfidentialERC20Mintable
 {
@@ -27,6 +23,7 @@ contract MyConfidentialERC20 is
     /// @param name_ The name of the token
     /// @param symbol_ The symbol of the token
     constructor(string memory name_, string memory symbol_) ConfidentialERC20Mintable(name_, symbol_, msg.sender) {
+        // DecryptionOracleCaller.setDecryptionOracle(GATEWAY_ADDRESS); // TODO
         SECRET = TFHE.asEuint64(42);
         TFHE.allowThis(SECRET);
     }
