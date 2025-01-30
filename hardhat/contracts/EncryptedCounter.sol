@@ -4,7 +4,7 @@ pragma solidity ^0.8.24;
 import "fhevm/lib/TFHE.sol";
 import { SepoliaZamaFHEVMConfig } from "fhevm/config/ZamaFHEVMConfig.sol";
 import { SepoliaZamaGatewayConfig } from "fhevm/config/ZamaGatewayConfig.sol";
-import "fhevm/gateway/GatewayCaller.sol";
+import "fhevm/decryption/DecryptionOracleCaller.sol";
 
 /// @title EncryptedCounter3
 /// @notice A contract that maintains an encrypted counter and is meant for demonstrating how decryption works
@@ -12,7 +12,7 @@ import "fhevm/gateway/GatewayCaller.sol";
 /// @custom:experimental This contract is experimental and uses FHE technology with decryption capabilities
 import "hardhat/console.sol";
 
-contract EncryptedCounter3 is SepoliaZamaFHEVMConfig, SepoliaZamaGatewayConfig, GatewayCaller {
+contract EncryptedCounter3 is SepoliaZamaFHEVMConfig, SepoliaZamaGatewayConfig, DecryptionOracleCaller {
     /// @dev Decrypted state variable
     euint8 internal counter;
     uint8 public decryptedCounter;
@@ -37,14 +37,14 @@ contract EncryptedCounter3 is SepoliaZamaFHEVMConfig, SepoliaZamaGatewayConfig, 
     function requestDecryptCounter() public {
         console.log("request decrypt counter");
         uint256[] memory cts = new uint256[](1);
-        cts[0] = Gateway.toUint256(counter);
-        Gateway.requestDecryption(cts, this.callbackCounter.selector, 0, block.timestamp + 100, false);
+        cts[0] = DecryptionOracleCaller.toUint256(counter);
+        DecryptionOracleCaller.requestDecryption(cts, this.callbackCounter.selector, 0, block.timestamp + 100, false);
     }
 
     /// @notice Callback function for counter decryption
     /// @param decryptedInput The decrypted counter value
     /// @return The decrypted value
-    function callbackCounter(uint256, uint8 decryptedInput) public onlyGateway returns (uint8) {
+    function callbackCounter(uint256, uint8 decryptedInput) public returns (uint8) {
         console.log("set decrypted counter");
         decryptedCounter = decryptedInput;
         return decryptedInput;

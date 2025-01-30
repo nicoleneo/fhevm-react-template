@@ -5,7 +5,7 @@ pragma solidity ^0.8.24;
 import "fhevm/lib/TFHE.sol";
 import "fhevm/config/ZamaFHEVMConfig.sol";
 import "fhevm/config/ZamaGatewayConfig.sol";
-import "fhevm/gateway/GatewayCaller.sol";
+import "fhevm/decryption/DecryptionOracleCaller.sol";
 import "fhevm-contracts/contracts/token/ERC20/extensions/ConfidentialERC20Mintable.sol";
 
 /// @notice This contract implements an encrypted ERC20-like token with confidential balances using Zama's FHE library.
@@ -14,7 +14,7 @@ import "fhevm-contracts/contracts/token/ERC20/extensions/ConfidentialERC20Mintab
 contract MyConfidentialERC20 is
     SepoliaZamaFHEVMConfig,
     SepoliaZamaGatewayConfig,
-    GatewayCaller,
+    DecryptionOracleCaller,
     ConfidentialERC20Mintable
 {
     // @note `SECRET` is not so secret, since it is trivially encrypted and just to have a decryption test
@@ -34,13 +34,13 @@ contract MyConfidentialERC20 is
     /// @notice Request decryption of `SECRET`
     function requestSecret() public {
         uint256[] memory cts = new uint256[](1);
-        cts[0] = Gateway.toUint256(SECRET);
-        Gateway.requestDecryption(cts, this.callbackSecret.selector, 0, block.timestamp + 100, false);
+        cts[0] = DecryptionOracleCaller.toUint256(SECRET);
+        DecryptionOracleCaller.requestDecryption(cts, this.callbackSecret.selector, 0, block.timestamp + 100, false);
     }
 
     /// @notice Callback function for `SECRET` decryption
     /// @param `decryptedValue` The decrypted 64-bit unsigned integer
-    function callbackSecret(uint256, uint64 decryptedValue) public onlyGateway {
+    function callbackSecret(uint256, uint64 decryptedValue) public {
         revealedSecret = decryptedValue;
     }
 }
