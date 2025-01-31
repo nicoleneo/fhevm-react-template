@@ -7,7 +7,7 @@
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
     "lib": ["es2020", "dom"],
-    "module": "NodeNext",
+    "module": "commonjs",
     "moduleResolution": "node",
     "noImplicitAny": true,
     "removeComments": true,

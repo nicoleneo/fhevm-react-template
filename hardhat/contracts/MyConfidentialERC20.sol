@@ -32,7 +32,7 @@ contract MyConfidentialERC20 is
     function requestSecret() public {
         uint256[] memory cts = new uint256[](1);
         cts[0] = DecryptionOracleCaller.toUint256(SECRET);
-        DecryptionOracleCaller.requestDecryption(cts, this.callbackSecret.selector, 0, block.timestamp + 100, false);
+        DecryptionOracleCaller.requestDecryption(cts, this.callbackSecret.selector);
     }
 
     /// @notice Callback function for `SECRET` decryption

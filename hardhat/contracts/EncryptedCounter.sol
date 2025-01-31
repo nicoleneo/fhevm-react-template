@@ -2,6 +2,7 @@
 pragma solidity ^0.8.24;
 
 import "fhevm/lib/TFHE.sol";
+import "fhevm/lib/Impl.sol";
 import "fhevm/decryption/DecryptionOracleCaller.sol";
 
 /// @title EncryptedCounter3
@@ -17,6 +18,12 @@ contract EncryptedCounter3 is DecryptionOracleCaller {
 
     constructor() {
         // DecryptionOracleCaller.setDecryptionOracle(GATEWAY_ADDRESS); // TODO
+        // TODO set fhevm config here
+        FHEVMConfigStruct storage $ = Impl.getFHEVMConfig();
+        console.log($.ACLAddress);
+        console.log($.TFHEExecutorAddress);
+        console.log($.KMSVerifierAddress);
+        console.log($.InputVerifierAddress);
 
         // Initialize counter with an encrypted zero value
         counter = TFHE.asEuint8(0);
@@ -37,7 +44,7 @@ contract EncryptedCounter3 is DecryptionOracleCaller {
         console.log("request decrypt counter");
         uint256[] memory cts = new uint256[](1);
         cts[0] = DecryptionOracleCaller.toUint256(counter);
-        DecryptionOracleCaller.requestDecryption(cts, this.callbackCounter.selector, 0, block.timestamp + 100, false);
+        DecryptionOracleCaller.requestDecryption(cts, this.callbackCounter.selector);
     }
 
     /// @notice Callback function for counter decryption
